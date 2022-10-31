@@ -1,12 +1,20 @@
 package net.kunmc.lab.ngchatguard;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
+import java.util.List;
 import net.kunmc.lab.ngchatguard.ngword.TestResult;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Guard implements Listener {
 
@@ -22,6 +30,69 @@ public class Guard implements Listener {
     Player player = event.getPlayer();
     String message = ((TextComponent) event.message()).content();
     TestResult result = Store.ngWordList.test(message);
+    if (!result.isSucceed()) {
+      result.sendResultMessage(player);
+      result.log(player);
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(ignoreCancelled = true)
+  public void onSignChange(SignChangeEvent event) {
+    /** 行ごとの入力内容 */
+    List<Component> lines = event.lines();
+
+    StringBuilder text = new StringBuilder();
+    // １行づつ処理
+    for (Component line : lines) {
+      TextComponent textComponent = (TextComponent) line;
+      text.append(textComponent.content());
+    }
+
+    Player player = event.getPlayer();
+
+    TestResult result = Store.ngWordList.test(text.toString());
+    if (!result.isSucceed()) {
+      result.sendResultMessage(player);
+      result.log(player);
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(ignoreCancelled = true)
+  public void onInventoryClick(InventoryClickEvent event) {
+
+    // インベントリが金床か判定
+    Inventory inventory = event.getInventory();
+    if (!(inventory instanceof AnvilInventory)) {
+      return;
+    }
+
+    // インベントリスロットの位置を判定
+    if (event.getRawSlot() != 2) {
+      return;
+    }
+
+    // アイテムメタを取得
+    ItemStack item = event.getCurrentItem();
+    ItemMeta itemMeta = item.getItemMeta();
+
+    // アイテムを掴んだときか判定
+    if (itemMeta == null) {
+      return;
+    }
+
+    // 変更後の名前を取得
+    TextComponent renameText = (TextComponent) itemMeta.displayName();
+
+    // 名づけされたアイテムか判定
+    if (renameText == null) {
+      return;
+    }
+
+    Player player = (Player) event.getWhoClicked();
+    TestResult result = Store.ngWordList.test(renameText.content());
+
     if (!result.isSucceed()) {
       result.sendResultMessage(player);
       result.log(player);

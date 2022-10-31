@@ -18,7 +18,7 @@ public class TestResult {
       this.message = "【OK】NGワードは検出されませんでした";
       this.isSucceed = true;
     } else {
-      this.message = "【NG】あなたのチャットにはNGワードが含まれています!\n";
+      this.message = "【NG】あなたの入力したテキストにはNGワードが含まれています!\n";
       this.message = this.message + StringUtil.insertColorCode(text, ngWords);
       this.isSucceed = false;
     }
