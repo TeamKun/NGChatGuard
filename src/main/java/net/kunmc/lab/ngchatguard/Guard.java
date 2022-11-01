@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,47 @@ public class Guard implements Listener {
     Player player = event.getPlayer();
     String message = ((TextComponent) event.message()).content();
     TestResult result = Store.ngWordList.test(message);
+    if (!result.isSucceed()) {
+      result.sendResultMessage(player);
+      result.log(player);
+      event.setCancelled(true);
+    }
+  }
+
+  /**
+   * tell,w,msgコマンド
+   */
+  @EventHandler(ignoreCancelled = true)
+  public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+
+    String[] commands = event.getMessage().split(" ");
+    /** コマンド */
+    String command = commands[0];
+
+    // tell,w,msgコマンドであるか判定
+    if (!command.equalsIgnoreCase("/tell") &&
+        !command.equalsIgnoreCase("/w") &&
+        !command.equalsIgnoreCase("/msg") &&
+        !command.equalsIgnoreCase("/tellraw")
+    ) {
+      return;
+    }
+
+    // 引数チェック
+    if (commands.length < 3) {
+      return;
+    }
+
+    /** チャット */
+    String text = "";
+
+    Player player = event.getPlayer();
+
+    for (int i = 2; i < commands.length; i++) {
+      text += commands[i];
+    }
+
+    TestResult result = Store.ngWordList.test(text);
     if (!result.isSucceed()) {
       result.sendResultMessage(player);
       result.log(player);
