@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class Config extends BaseConfig {
 
-  public final StringValue id = new StringValue("");
-  public final StringValue token = new StringValue("");
+  public final StringValue APIId = new StringValue("").writableByCommand(false).listable(false);
+  public final StringValue APIToken = new StringValue("").writableByCommand(false).listable(false);
   public final StringValue reloadTriggerPlayer = new StringValue("roadhog_kun");
   public final BooleanValue shouldAlertInvalid = new BooleanValue(true);
 

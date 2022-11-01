@@ -14,7 +14,10 @@ public final class NGChatGuard extends JavaPlugin {
   public void onEnable() {
     Store.plugin = this;
     Store.config = new Config(this);
-    CommandLib.register(this, new MainCommand("ngchat"), new TestCommand("ngtest"));
+    CommandLib.register(this,
+        new MainCommand("ngchat"),
+        new TestCommand("ngtest")
+    );
     Bukkit.getPluginManager().registerEvents(new Guard(), this);
     Bukkit.getPluginManager().registerEvents(new AutoReloader(), this);
 

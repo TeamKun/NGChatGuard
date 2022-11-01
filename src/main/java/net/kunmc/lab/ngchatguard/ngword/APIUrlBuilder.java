@@ -9,8 +9,8 @@ class APIUrlBuilder {
   static URL build() throws MalformedURLException {
     return new URL(
         "https://script.google.com/macros/s/"
-            .concat(Store.config.id.value())
+            .concat(Store.config.APIId.value())
             .concat("/exec?token=")
-            .concat(Store.config.token.value()));
+            .concat(Store.config.APIToken.value()));
   }
 }

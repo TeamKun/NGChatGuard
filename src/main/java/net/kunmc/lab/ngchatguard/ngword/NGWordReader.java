@@ -25,7 +25,6 @@ public class NGWordReader {
   public NGWordReader(NGChatGuard plugin) throws MalformedURLException {
     this.plugin = plugin;
     this.url = APIUrlBuilder.build();
-    Bukkit.getLogger().info(this.url.toString());
   }
 
   public boolean read() {
