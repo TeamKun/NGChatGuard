@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.kunmc.lab"
-version = "1.0.0"
+version = "1.1"
 
 repositories {
     mavenCentral()
@@ -32,7 +32,7 @@ dependencies {
     implementation 'com.github.TeamKun.CommandLib:bukkit:latest.release'
     implementation 'com.github.TeamKun.ConfigLib:bukkit:latest.release'
     implementation "com.google.code.gson:gson:2.8.9"
-    
+
 }
 
 def targetJavaVersion = 8
