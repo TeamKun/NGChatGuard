@@ -13,10 +13,11 @@ public class Reload extends Command {
 
   @Override
   protected void execute(@NotNull CommandContext ctx) {
-    if (Store.reader.read()) {
-      ctx.sendSuccess("NGワードのリロードに成功しました");
+    ExecuteResult result = Store.reader.read(false);
+    if (result.isSucceed()) {
+      ctx.sendSuccess(result.message());
     } else {
-      ctx.sendFailure("NGワードのリロードに失敗しました");
+      ctx.sendFailure(result.message());
     }
   }
 }

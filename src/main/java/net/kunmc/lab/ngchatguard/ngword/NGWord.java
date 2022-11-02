@@ -33,12 +33,9 @@ public class NGWord {
   }
 
   public ArrayList<Integer> indexOf(String text) {
-    System.out.println(text);
-
     if (!this.isStrict) {
       text = StringUtil.shape(text);
     }
-    System.out.println(text);
     ArrayList<Integer> result = new ArrayList<>();
     int i = text.indexOf(this.word);
     if (i >= 0) {

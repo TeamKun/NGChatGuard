@@ -46,11 +46,10 @@ public class TestResult {
 
   public void log(Player player) {
     if (!this.isSucceed) {
-      String message = player.getName() + " send NGWord [";
+      String message = player.getName() + " send NGWord e";
       for (NGWord ngWord : this.ngWords) {
         message += ngWord.text() + " ";
       }
-      message += "]";
       Bukkit.getLogger().info(message);
     }
   }

@@ -27,6 +27,7 @@ public class Guard implements Listener {
         Bukkit.getLogger().info(
             "[NGChatGuard] NGワードがロードされていないため無効化されています。この警告を消す場合はコンフィグのshouldAlertInvalidをfalseにしてください");
       }
+      return;
     }
     Player player = event.getPlayer();
     String message = ((TextComponent) event.message()).content();

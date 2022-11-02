@@ -1,6 +1,5 @@
 package net.kunmc.lab.ngchatguard;
 
-import java.net.MalformedURLException;
 import net.kunmc.lab.commandlib.CommandLib;
 import net.kunmc.lab.ngchatguard.command.MainCommand;
 import net.kunmc.lab.ngchatguard.command.TestCommand;
@@ -20,13 +19,9 @@ public final class NGChatGuard extends JavaPlugin {
     );
     Bukkit.getPluginManager().registerEvents(new Guard(), this);
     Bukkit.getPluginManager().registerEvents(new AutoReloader(), this);
-
-    try {
-      Store.reader = new NGWordReader(Store.plugin);
-      Store.reader.read();
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    }
+    
+    Store.reader = new NGWordReader(Store.plugin);
+    Store.reader.read(true);
   }
 
   @Override

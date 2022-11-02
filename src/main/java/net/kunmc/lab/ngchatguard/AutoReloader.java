@@ -11,7 +11,7 @@ public class AutoReloader implements Listener {
   public void onPlayerJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
     if (player.getName().equals(Store.config.reloadTriggerPlayer.value())) {
-      Store.reader.read();
+      Store.reader.read(true);
     }
   }
 }
