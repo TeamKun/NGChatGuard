@@ -11,9 +11,10 @@ public class TestResult {
   private String message;
   private boolean isSucceed;
   private ArrayList<NGWord> ngWords;
+  private String originalText;
 
   public TestResult(String text, ArrayList<NGWord> ngWords) {
-
+    this.originalText = text;
     if (ngWords.size() == 0) {
       this.message = "【OK】NGワードは検出されませんでした";
       this.isSucceed = true;
@@ -40,16 +41,18 @@ public class TestResult {
 
   public void sendResultMessage(Player player) {
     if (!this.isSucceed) {
-      player.sendMessage("§c" + this.message);
+      player.sendMessage("§c" + this.message + "\n/ngtest <text> で事前に確認できます。");
     }
   }
 
   public void log(Player player) {
     if (!this.isSucceed) {
-      String message = player.getName() + " send NGWord e";
+      String message = "[NG words] " + player.getName() + " send NGWord ";
       for (NGWord ngWord : this.ngWords) {
         message += ngWord.text() + " ";
       }
+
+      message += "\n[NG original] " + this.originalText;
       Bukkit.getLogger().info(message);
     }
   }

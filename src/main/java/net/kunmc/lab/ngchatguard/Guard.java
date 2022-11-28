@@ -2,6 +2,7 @@ package net.kunmc.lab.ngchatguard;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import java.util.List;
+import java.util.UUID;
 import net.kunmc.lab.ngchatguard.ngword.TestResult;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -21,6 +22,9 @@ public class Guard implements Listener {
 
   @EventHandler(ignoreCancelled = true)
   public void onAsyncChat(AsyncChatEvent event) {
+    if (isBypassPlayer(event.getPlayer().getUniqueId())) {
+      return;
+    }
 
     if (Store.ngWordList == null) {
       if (Store.config.shouldAlertInvalid.value()) {
@@ -44,6 +48,10 @@ public class Guard implements Listener {
    */
   @EventHandler(ignoreCancelled = true)
   public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+
+    if (isBypassPlayer(event.getPlayer().getUniqueId())) {
+      return;
+    }
 
     String[] commands = event.getMessage().split(" ");
     /** コマンド */
@@ -82,6 +90,10 @@ public class Guard implements Listener {
 
   @EventHandler(ignoreCancelled = true)
   public void onSignChange(SignChangeEvent event) {
+
+    if (isBypassPlayer(event.getPlayer().getUniqueId())) {
+      return;
+    }
     /** 行ごとの入力内容 */
     List<Component> lines = event.lines();
 
@@ -104,6 +116,9 @@ public class Guard implements Listener {
 
   @EventHandler(ignoreCancelled = true)
   public void onInventoryClick(InventoryClickEvent event) {
+    if (isBypassPlayer(event.getWhoClicked().getUniqueId())) {
+      return;
+    }
 
     // インベントリが金床か判定
     Inventory inventory = event.getInventory();
@@ -141,5 +156,9 @@ public class Guard implements Listener {
       result.log(player);
       event.setCancelled(true);
     }
+  }
+
+  private boolean isBypassPlayer(UUID uuid) {
+    return Store.config.bypassPlayers.contains(uuid);
   }
 }
