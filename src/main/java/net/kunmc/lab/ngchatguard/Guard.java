@@ -3,7 +3,9 @@ package net.kunmc.lab.ngchatguard;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import java.util.List;
 import java.util.UUID;
-import net.kunmc.lab.ngchatguard.ngword.TestResult;
+import net.kunmc.lab.ngchatapi.NGWord;
+import net.kunmc.lab.ngchatapi.NGWordStore;
+import net.kunmc.lab.ngchatapi.TestResult;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
@@ -25,8 +27,7 @@ public class Guard implements Listener {
     if (isBypassPlayer(event.getPlayer().getUniqueId())) {
       return;
     }
-
-    if (Store.ngWordList == null) {
+    if (NGWordStore.ngWordList == null) {
       if (Store.config.shouldAlertInvalid.value()) {
         Bukkit.getLogger().info(
             "[NGChatGuard] NGワードがロードされていないため無効化されています。この警告を消す場合はコンフィグのshouldAlertInvalidをfalseにしてください");
@@ -35,10 +36,10 @@ public class Guard implements Listener {
     }
     Player player = event.getPlayer();
     String message = ((TextComponent) event.message()).content();
-    TestResult result = Store.ngWordList.test(message);
+    TestResult result = NGWordStore.ngWordList.test(message);
     if (!result.isSucceed()) {
-      result.sendResultMessage(player);
-      result.log(player);
+      sendResultMessage(player, result);
+      log(player, result);
       event.setCancelled(true);
     }
   }
@@ -80,10 +81,10 @@ public class Guard implements Listener {
       text += commands[i];
     }
 
-    TestResult result = Store.ngWordList.test(text);
+    TestResult result = NGWordStore.ngWordList.test(text);
     if (!result.isSucceed()) {
-      result.sendResultMessage(player);
-      result.log(player);
+      sendResultMessage(player, result);
+      log(player, result);
       event.setCancelled(true);
     }
   }
@@ -106,10 +107,10 @@ public class Guard implements Listener {
 
     Player player = event.getPlayer();
 
-    TestResult result = Store.ngWordList.test(text.toString());
+    TestResult result = NGWordStore.ngWordList.test(text.toString());
     if (!result.isSucceed()) {
-      result.sendResultMessage(player);
-      result.log(player);
+      sendResultMessage(player, result);
+      log(player, result);
       event.setCancelled(true);
     }
   }
@@ -149,12 +150,30 @@ public class Guard implements Listener {
     }
 
     Player player = (Player) event.getWhoClicked();
-    TestResult result = Store.ngWordList.test(renameText.content());
+    TestResult result = NGWordStore.ngWordList.test(renameText.content());
 
     if (!result.isSucceed()) {
-      result.sendResultMessage(player);
-      result.log(player);
+      sendResultMessage(player, result);
+      log(player, result);
       event.setCancelled(true);
+    }
+  }
+
+  private void sendResultMessage(Player player, TestResult result) {
+    if (!result.isSucceed()) {
+      player.sendMessage("§c" + result.resultMessage() + "\n/ngtest <text> で事前に確認できます。");
+    }
+  }
+
+  private void log(Player player, TestResult result) {
+    if (!result.isSucceed()) {
+      String message = "[NG words] " + player.getName() + " send NGWord ";
+      for (NGWord ngWord : result.ngWords()) {
+        message += ngWord.text() + " ";
+      }
+
+      message += "\n[NG original] " + result.originalText();
+      Bukkit.getLogger().info(message);
     }
   }
 

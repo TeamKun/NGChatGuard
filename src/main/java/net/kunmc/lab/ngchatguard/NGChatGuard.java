@@ -1,9 +1,9 @@
 package net.kunmc.lab.ngchatguard;
 
 import net.kunmc.lab.commandlib.CommandLib;
+import net.kunmc.lab.ngchatapi.NGWordReader;
 import net.kunmc.lab.ngchatguard.command.MainCommand;
 import net.kunmc.lab.ngchatguard.command.TestCommand;
-import net.kunmc.lab.ngchatguard.ngword.NGWordReader;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,9 +19,10 @@ public final class NGChatGuard extends JavaPlugin {
     );
     Bukkit.getPluginManager().registerEvents(new Guard(), this);
     Bukkit.getPluginManager().registerEvents(new AutoReloader(), this);
-    
-    Store.reader = new NGWordReader(Store.plugin);
-    Store.reader.read(true);
+
+    Store.reader = new NGWordReader(Store.plugin.getDataFolder().getAbsoluteFile());
+    Bukkit.getLogger().info(
+        Store.reader.read(Store.config.APIId.value(), Store.config.APIToken.value()).message());
   }
 
   @Override

@@ -4,7 +4,7 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Locale;
-import net.kunmc.lab.ngchatguard.ngword.NGWord;
+import net.kunmc.lab.ngchatapi.NGWord;
 
 public class StringUtil {
 

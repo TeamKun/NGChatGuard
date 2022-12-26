@@ -1,5 +1,6 @@
 package net.kunmc.lab.ngchatguard;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,7 +12,8 @@ public class AutoReloader implements Listener {
   public void onPlayerJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
     if (player.getName().equals(Store.config.reloadTriggerPlayer.value())) {
-      Store.reader.read(true);
+      Bukkit.getLogger().info(
+          Store.reader.read(Store.config.APIId.value(), Store.config.APIToken.value()).message());
     }
   }
 }
